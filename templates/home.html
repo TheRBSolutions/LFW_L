@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Home - Last Few Words
+{% endblock %}
+
+{% block content %}
+    <div class="jumbotron">
+        <h1>Welcome to Last Few Words</h1>
+        <p class="lead">Your platform to share and preserve precious memories.</p>
+        <hr>
+        {% if user.is_authenticated %}
+            <h2>Available Sections</h2>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <a href="{% url 'account_profile' %}">Profile</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{% url 'content_list' %}">Content List</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{% url 'content_upload' %}">Upload Content</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{% url 'legacy_list' %}">Family Legacy List</a>
+                </li>
+                <li class="list-group-item">
+                    <a href="{% url 'add_legacy' %}">Add Family Legacy</a>
+                </li>
+            </ul>
+        {% else %}
+            <p><a class="btn btn-primary btn-lg" href="{% url 'account_signup' %}" role="button">Sign Up Today</a></p>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Family Legacy{% endblock %}
+{% block content %}
+<h2>Family Legacy</h2>
+{% for legacy in legacy_list %}
+    <div class="legacy-item">
+        <h3>{{ legacy.title }}</h3>
+        <p>{{ legacy.description }}</p>
+    </div>
+{% empty %}
+    <p>No legacy content available.</p>
+{% endfor %}
+<a href="{% url 'family_legacy_create' %}" class="btn btn-success">Add New Legacy</a>
+{% endblock %}
