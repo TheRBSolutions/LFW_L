@@ -2,7 +2,7 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com']  # Add your production domains here
+
 
 # Security settings - keep the secret key secret in production!
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')  # Make sure the environment variable is set properly.
@@ -38,3 +38,12 @@ SECURE_BROWSER_XSS_FILTER = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_SSL_REDIRECT = True
 X_FRAME_OPTIONS = 'DENY'
+
+ALLOWED_HOSTS = ['yourdomain.com', 'www.yourdomain.com']  # Add your production domains here
+
+
+CORS_ALLOWED_ORIGINS = [
+    'https://yourdomain.com',
+    'https://subdomain.yourdomain.com',
+    # Add other domains as needed
+]

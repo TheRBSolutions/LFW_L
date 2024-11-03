@@ -1,0 +1,297 @@
+<!-- templates/dashbord/dashboard.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard</title>
+    <!-- Include Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <!-- Include Tailwind CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="container mx-auto px-4 py-8">
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
+        </div>
+
+        <!-- User Metrics Display -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+            <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-lg font-bold text-gray-700">Total Users</h3>
+                <p id="totalUsers" class="text-2xl font-semibold text-blue-500"></p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-lg font-bold text-gray-700">Active Users</h3>
+                <p id="activeUsers" class="text-2xl font-semibold text-green-500"></p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-lg font-bold text-gray-700">Online Users</h3>
+                <p id="onlineUsers" class="text-2xl font-semibold text-purple-500"></p>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+                <h3 class="text-lg font-bold text-gray-700">New Users Today</h3>
+                <p id="newUsersToday" class="text-2xl font-semibold text-red-500"></p>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+            <!-- User Growth Chart -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-bold mb-4 text-gray-700">User Growth</h2>
+                <canvas id="userGrowthChart"></canvas>
+            </div>
+
+            <!-- Content Distribution Chart -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-bold mb-4 text-gray-700">Content Distribution</h2>
+                <canvas id="contentDistributionChart"></canvas>
+            </div>
+
+            <!-- Hourly Activity Chart -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-bold mb-4 text-gray-700">Hourly Activity</h2>
+                <canvas id="hourlyActivityChart"></canvas>
+            </div>
+
+            <!-- Storage Usage Trend Chart -->
+            <div class="bg-white p-6 rounded-lg shadow-lg">
+                <h2 class="text-xl font-bold mb-4 text-gray-700">Storage Usage Trend</h2>
+                <canvas id="storageUsageTrendChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Recent Activities -->
+        <div id="recentActivities" class="bg-white p-6 rounded-lg shadow-lg mt-6">
+            <h2 class="text-xl font-bold mb-4 text-gray-700">Recent Activities</h2>
+            <ul id="activitiesList" class="list-disc pl-5"></ul>
+        </div>
+
+        <!-- Refresh Button -->
+        <div class="mt-6 text-center">
+            <button onclick="refreshCharts()" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                Refresh Data
+            </button>
+        </div>
+    </div>
+
+    <!-- JavaScript Section -->
+    <script>
+        // Declare a global object to hold your chart instances
+        let charts = {};
+
+        // Fetch data from API
+        async function fetchChartData() {
+            try {
+                const response = await fetch('/api/dashboard/data');
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error fetching chart data:', error);
+                return null;
+            }
+        }
+
+        // Initialize all charts
+        async function initializeCharts() {
+            const data = await fetchChartData();
+            createCharts(data);
+        }
+
+        // Create all charts
+        function createCharts(data) {
+            if (!data) return;
+
+            // User Growth Chart
+            charts.userGrowth = new Chart(document.getElementById('userGrowthChart'), {
+                type: 'line',
+                data: {
+                    labels: data.user_growth.labels,
+                    datasets: [{
+                        label: 'New Users',
+                        data: data.user_growth.data,
+                        borderColor: 'rgb(75, 192, 192)',
+                        tension: 0.1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+
+            // Content Distribution Chart
+            const contentTypes = Object.keys(data.content_distribution);
+            const contentCounts = Object.values(data.content_distribution);
+
+            charts.contentDistribution = new Chart(document.getElementById('contentDistributionChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: contentTypes,
+                    datasets: [{
+                        data: contentCounts,
+                        backgroundColor: [
+                            'rgb(255, 99, 132)', // Color for first content type
+                            'rgb(54, 162, 235)', // Color for second content type
+                            'rgb(255, 206, 86)', // Color for third content type
+                            // Add more colors if you have more content types
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { position: 'bottom' }
+                    }
+                }
+            });
+
+            // Hourly Activity Chart
+            charts.hourlyActivity = new Chart(document.getElementById('hourlyActivityChart'), {
+                type: 'bar',
+                data: {
+                    labels: data.hourly_activity.labels,
+                    datasets: [{
+                        label: 'User Activity',
+                        data: data.hourly_activity.data,
+                        backgroundColor: 'rgb(75, 192, 192)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Hour of Day'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Number of Users'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Storage Usage Trend Chart
+            charts.storageUsageTrend = new Chart(document.getElementById('storageUsageTrendChart'), {
+                type: 'line',
+                data: {
+                    labels: data.storage_usage_trend.labels,
+                    datasets: [{
+                        label: 'Total Storage Used (GB)',
+                        data: data.storage_usage_trend.data.map(size => (size / (1024 ** 3)).toFixed(2)), // Convert bytes to GB
+                        borderColor: 'rgb(255, 159, 64)',
+                        tension: 0.1,
+                        fill: true,
+                        backgroundColor: 'rgba(255, 159, 64, 0.2)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Date'
+                            }
+                        },
+                        y: {
+                            beginAtZero: true,
+                            title: {
+                                display: true,
+                                text: 'Storage Used (GB)'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Update User Metrics Display
+            document.getElementById('totalUsers').textContent = data.user_metrics.total_users;
+            document.getElementById('activeUsers').textContent = data.user_metrics.active_users;
+            document.getElementById('onlineUsers').textContent = data.user_metrics.online_users;
+            document.getElementById('newUsersToday').textContent = data.user_metrics.new_users_today;
+
+            // Recent Activities
+            const activitiesList = document.getElementById('activitiesList');
+            activitiesList.innerHTML = ''; // Clear existing items
+
+            data.recent_activities.forEach(activity => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('mb-2');
+
+                // Format timestamp
+                const timestamp = new Date(activity.timestamp).toLocaleString();
+
+                listItem.innerHTML = `
+                    <strong>${activity.type.replace('_', ' ').toUpperCase()}</strong>: ${activity.description} <br>
+                    <span class="text-sm text-gray-500">${timestamp}</span>
+                `;
+                activitiesList.appendChild(listItem);
+            });
+        }
+
+        // Function to refresh chart data
+        async function refreshCharts() {
+            const data = await fetchChartData();
+            if (!data) return;
+
+            // Update User Growth Chart
+            charts.userGrowth.data.labels = data.user_growth.labels;
+            charts.userGrowth.data.datasets[0].data = data.user_growth.data;
+            charts.userGrowth.update();
+
+            // Update Content Distribution Chart
+            const contentTypes = Object.keys(data.content_distribution);
+            const contentCounts = Object.values(data.content_distribution);
+            charts.contentDistribution.data.labels = contentTypes;
+            charts.contentDistribution.data.datasets[0].data = contentCounts;
+            charts.contentDistribution.update();
+
+            // Update Hourly Activity Chart
+            charts.hourlyActivity.data.labels = data.hourly_activity.labels;
+            charts.hourlyActivity.data.datasets[0].data = data.hourly_activity.data;
+            charts.hourlyActivity.update();
+
+            // Update Storage Usage Trend Chart
+            charts.storageUsageTrend.data.labels = data.storage_usage_trend.labels;
+            charts.storageUsageTrend.data.datasets[0].data = data.storage_usage_trend.data.map(size => (size / (1024 ** 3)).toFixed(2));
+            charts.storageUsageTrend.update();
+
+            // Update User Metrics Display
+            document.getElementById('totalUsers').textContent = data.user_metrics.total_users;
+            document.getElementById('activeUsers').textContent = data.user_metrics.active_users;
+            document.getElementById('onlineUsers').textContent = data.user_metrics.online_users;
+            document.getElementById('newUsersToday').textContent = data.user_metrics.new_users_today;
+
+            // Update Recent Activities
+            const activitiesList = document.getElementById('activitiesList');
+            activitiesList.innerHTML = ''; // Clear existing items
+            data.recent_activities.forEach(activity => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('mb-2');
+
+                // Format timestamp
+                const timestamp = new Date(activity.timestamp).toLocaleString();
+
+                listItem.innerHTML = `
+                    <strong>${activity.type.replace('_', ' ').toUpperCase()}</strong>: ${activity.description} <br>
+                    <span class="text-sm text-gray-500">${timestamp}</span>
+                `;
+                activitiesList.appendChild(listItem);
+            });
+        }
+
+        // Initialize charts when page loads
+        document.addEventListener('DOMContentLoaded', initializeCharts);
+    </script>
+</body>
+</html>

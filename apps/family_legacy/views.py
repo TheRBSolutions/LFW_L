@@ -30,9 +30,14 @@ def add_legacy(request):
         form = FamilyLegacyForm()
     return render(request, 'family_legacy/add_legacy.html', {'form': form})
 
-# Ninja Router Setup
-router = Router()
 
+
+
+
+
+# Commented out API Endpoints for Future Use (e.g., Mobile APIs)
+
+"""
 # List Family Legacies Endpoint (GET)
 @router.get('/family_legacy', response=list[FamilyLegacySchema])
 def list_family_legacy(request):
@@ -70,3 +75,6 @@ def delete_family_legacy(request, legacy_id: int):
     logger.info(f"Deleting family legacy '{legacy.title}' by user {request.user.email}")
     legacy.delete()
     return {"success": True}
+"""
+
+# Note: The above endpoints are commented out for now and can be used in the future for mobile API development.

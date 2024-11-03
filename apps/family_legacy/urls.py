@@ -5,3 +5,5 @@ urlpatterns = [
     path('', legacy_list, name='legacy_list'),
     path('add/', add_legacy, name='add_legacy'),
 ]
+
+

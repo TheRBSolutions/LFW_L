@@ -5,31 +5,32 @@ Home - Last Few Words
 {% endblock %}
 
 {% block content %}
-    <div class="jumbotron">
-        <h1>Welcome to Last Few Words</h1>
-        <p class="lead">Your platform to share and preserve precious memories.</p>
-        <hr>
+    <div class="home-container">
+        <h1 class="home-title">Welcome to Last Few Words</h1>
+        <p class="home-lead">Your platform to share and preserve precious memories.</p>
+        <hr class="divider">
+
         {% if user.is_authenticated %}
-            <h2>Available Sections</h2>
-            <ul class="list-group">
-                <li class="list-group-item">
-                    <a href="{% url 'account_profile' %}">Profile</a>
+            <h2 class="section-title">Available Sections</h2>
+            <ul class="section-list">
+                {% comment %} <li class="section-item">
+                    <a href="{% url 'account_profile' %}" class="section-link">Profile</a>
+                </li> {% endcomment %}
+                <li class="section-item">
+                    <a href="{% url 'content_list' %}" class="section-link">Content List</a>
                 </li>
-                <li class="list-group-item">
-                    <a href="{% url 'content_list' %}">Content List</a>
+                <li class="section-item">
+                    <a href="{% url 'content_upload' %}" class="section-link">Upload Content</a>
                 </li>
-                <li class="list-group-item">
-                    <a href="{% url 'content_upload' %}">Upload Content</a>
+                <li class="section-item">
+                    <a href="{% url 'legacy_list' %}" class="section-link">Family Legacy List</a>
                 </li>
-                <li class="list-group-item">
-                    <a href="{% url 'legacy_list' %}">Family Legacy List</a>
-                </li>
-                <li class="list-group-item">
-                    <a href="{% url 'add_legacy' %}">Add Family Legacy</a>
+                <li class="section-item">
+                    <a href="{% url 'add_legacy' %}" class="section-link">Add Family Legacy</a>
                 </li>
             </ul>
         {% else %}
-            <p><a class="btn btn-primary btn-lg" href="{% url 'account_signup' %}" role="button">Sign Up Today</a></p>
+            <p><a class="btn btn-primary btn-lg" href="{% url 'account_signup' %}">Sign Up Today</a></p>
         {% endif %}
     </div>
 {% endblock %}

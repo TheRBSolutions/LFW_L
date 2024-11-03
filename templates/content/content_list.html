@@ -1,12 +1,14 @@
 {% extends "base.html" %}
+
 {% block title %}My Content{% endblock %}
+
 {% block content %}
 <h2>My Content</h2>
 {% for item in content_list %}
     <div class="content-item">
         <h3>{{ item.title }}</h3>
         <p>{{ item.description }}</p>
-        <a href="{{ item.file.url }}" target="_blank">Download</a>
+        <a href="{{ item.file.url }}" target="_blank" class="btn btn-primary">Play</a>
     </div>
 {% empty %}
     <p>No content available.</p>

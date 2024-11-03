@@ -8,7 +8,7 @@ INTERNAL_IPS = [
     "127.0.0.1",
 ]
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Emails are printed in console during development
+# EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'  # Emails are printed in console during development
 
 # Additional or modified settings for development can go here.
 DATABASES = {
@@ -17,3 +17,10 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
+
+# Development settings
+CORS_ALLOW_ALL_ORIGINS = True  # Only in development
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # Vue dev server
+]

@@ -1,9 +1,13 @@
-from django.urls import path
-from . import views
+# apps/accounts/urls.py
+from django.urls import path, include
+from . import views  # Import views for custom auth
 
 urlpatterns = [
-    path('signup/', views.CustomSignupView.as_view(), name='account_signup'),
-    path('login/', views.CustomLoginView.as_view(), name='account_login'),
-    path('logout/', views.CustomLogoutView.as_view(), name='account_logout'),
-    path('profile/', views.ProfileView.as_view(), name='account_profile'),
+    path('signup/', views.signup_view, name='account_signup'),  # Custom signup
+    path('login/', views.login_view, name='account_login'),  # Custom login
+    path('logout/', views.logout_view, name='account_logout'),  # Custom logout
+    
+    # Include only the social account URLs for Google login
+    path('', include('allauth.urls')),
+    path('', include('allauth.socialaccount.urls')),
 ]

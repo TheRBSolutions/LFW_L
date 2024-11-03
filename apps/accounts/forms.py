@@ -1,14 +1,17 @@
 # apps/accounts/forms.py
 from django import forms
-from .models import User
+from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import AuthenticationForm
 
-class SignupForm(forms.ModelForm):
-    password = forms.CharField(widget=forms.PasswordInput)
-    confirm_password = forms.CharField(widget=forms.PasswordInput)
+User = get_user_model()
+
+class CustomSignupForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput, label="Password")
+    confirm_password = forms.CharField(widget=forms.PasswordInput, label="Confirm Password")
 
     class Meta:
         model = User
-        fields = ['username', 'email', 'password', 'confirm_password', 'date_of_birth']
+        fields = ['email', 'password']  # Only email and password
 
     def clean_confirm_password(self):
         password = self.cleaned_data.get('password')
@@ -16,3 +19,14 @@ class SignupForm(forms.ModelForm):
         if password != confirm_password:
             raise forms.ValidationError("Passwords do not match.")
         return confirm_password
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.set_password(self.cleaned_data['password'])  # Hash the password
+        if commit:
+            user.save()
+        return user
+
+class CustomLoginForm(AuthenticationForm):
+    # Uses Django's AuthenticationForm for login, compatible with custom user model
+    pass
