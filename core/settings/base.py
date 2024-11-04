@@ -4,6 +4,11 @@ from django.contrib.messages import constants as messages
 from dotenv import load_dotenv
 import logging
 
+
+
+WSGI_APPLICATION = 'core.wsgi.application'
+ROOT_URLCONF = 'core.urls'
+
 # Load environment variables from a .env file
 load_dotenv()
 
@@ -62,6 +67,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -74,7 +80,7 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
 ]
 
-ROOT_URLCONF = 'core.urls'
+
 
 TEMPLATES = [
     {
@@ -93,7 +99,7 @@ TEMPLATES = [
 ]
 
 
-WSGI_APPLICATION = 'core.wsgi.application'
+
 
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
