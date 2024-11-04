@@ -161,61 +161,44 @@ LOGGING = {
         },
     },
     'handlers': {
-        'file': {
-            'level': 'DEBUG',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs/debug.log',
-            'formatter': 'verbose',
-        },
-        'security_file': {
-            'level': 'INFO',
-            'class': 'logging.FileHandler',
-            'filename': BASE_DIR / 'logs/security.log',
-            'formatter': 'verbose',
-        },
-        'mail_admins': {
-            'level': 'ERROR',
-            'class': 'django.utils.log.AdminEmailHandler',
-        },
         'console': {
-            'level': 'DEBUG',
             'class': 'logging.StreamHandler',
-            'formatter': 'verbose',
+            'formatter': 'verbose',  # Use the 'verbose' format for detailed logging
         },
+    },
+    'root': {
+        'handlers': ['console'],
+        'level': 'INFO',  # Change to 'DEBUG' for more verbose output
     },
     'loggers': {
         'django': {
-            'handlers': ['file', 'console'],  # Added console handler
+            'handlers': ['console'],
             'level': 'INFO',
             'propagate': True,
         },
         'django.security': {
-            'handlers': ['security_file', 'mail_admins'],
+            'handlers': ['console'],
             'level': 'INFO',
             'propagate': False,
         },
-        'django.core.mail': {
-            'handlers': ['console'],  # Only console output for email-specific logs
-            'level': 'DEBUG',         # Enable detailed debugging for emails
-            'propagate': False,
-        },
         'apps.accounts': {
-            'handlers': ['file'],
+            'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,
         },
         'apps.content': {
-            'handlers': ['file'],
+            'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,
         },
         'apps.family_legacy': {
-            'handlers': ['file'],
+            'handlers': ['console'],
             'level': 'DEBUG',
             'propagate': True,
         },
     },
 }
+
 
 
 
