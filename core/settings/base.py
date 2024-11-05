@@ -307,4 +307,4 @@ MAILJET_API_SECRET = '3bb265b3c215af88eb4058a309b2066a'      # Your actual Secre
 CSRF_COOKIE_SECURE = False  # Set to True in production
 CSRF_COOKIE_HTTPONLY = True
 CSRF_USE_SESSIONS = True
-CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']  # Include your domain in production
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000','https://lfwlatest-production.up.railway.app']  # Include your domain in production
