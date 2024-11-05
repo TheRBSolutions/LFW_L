@@ -39,7 +39,7 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_SSL_REDIRECT = True
 X_FRAME_OPTIONS = 'DENY'
 
-ALLOWED_HOSTS = ['','therbsolutions.com', 'www.therbsolutions.com']  # Add your production domains here
+ALLOWED_HOSTS = ['lfwlatest-production.up.railway.app','therbsolutions.com', 'www.therbsolutions.com']  # Add your production domains here
 
 
 CORS_ALLOWED_ORIGINS = [

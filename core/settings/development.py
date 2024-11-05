@@ -2,7 +2,7 @@ from .base import *
 
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['lfwlatest-production.up.railway.app','localhost', '127.0.0.1']
 
 INTERNAL_IPS = [
     "127.0.0.1",
@@ -21,6 +21,3 @@ DATABASES = {
 
 # Development settings
 CORS_ALLOW_ALL_ORIGINS = True  # Only in development
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Vue dev server
-]

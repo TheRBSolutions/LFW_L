@@ -1,13 +1,27 @@
 # apps/accounts/urls.py
 from django.urls import path, include
-from . import views  # Import views for custom auth
+from allauth.account.views import (
+    LoginView, 
+    SignupView, 
+    LogoutView,
+    EmailView,
+    PasswordChangeView,
+    PasswordResetView
+)
 
 urlpatterns = [
-    path('signup/', views.signup_view, name='account_signup'),  # Custom signup
-    path('login/', views.login_view, name='account_login'),  # Custom login
-    path('logout/', views.logout_view, name='account_logout'),  # Custom logout
+    # Basic authentication views
+    path('login/', LoginView.as_view(), name='account_login'),
+    path('signup/', SignupView.as_view(), name='account_signup'),
+    path('logout/', LogoutView.as_view(), name='account_logout'),
     
-    # Include only the social account URLs for Google login
-    path('', include('allauth.urls')),
-    path('', include('allauth.socialaccount.urls')),
+    # Email management
+    path('email/', EmailView.as_view(), name='account_email'),
+    
+    # Password management
+    path('password/change/', PasswordChangeView.as_view(), name='account_change_password'),
+    path('password/reset/', PasswordResetView.as_view(), name='account_reset_password'),
+    
+    # Include all remaining allauth URLs
+    path('', include('allauth.account.urls')),
 ]

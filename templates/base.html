@@ -5,44 +5,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Last Few Words{% endblock %}</title>
-    
     <link rel="stylesheet" href="{% static 'css/styles.css' %}">
-    
-    {% block extra_head %}{% endblock %}
+    {% block extra_css %}{% endblock %}
 </head>
 <body>
-    <header>
-        <nav class="navbar">
-            <div class="navbar-brand">
-                <img src="{% static 'images/logo.png' %}" alt="LFW Logo" class="logo">
-                <a href="{% url 'home' %}" class="site-title">Last Few Words</a>
-            </div>
-            <div class="navbar-links">
-                <ul class="navbar-nav">
-                    {% if user.is_authenticated %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'account_logout' %}">Logout</a>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'account_login' %}">Login</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="{% url 'account_signup' %}">Sign Up</a>
-                        </li>
-                    {% endif %}
-                </ul>
-            </div>
-        </nav>
-    </header>
+    <nav class="navbar">
+        <div class="navbar-brand">
+            <img src="{% static 'images/logo.png' %}" alt="LFW Logo" class="logo">
+            <a href="{% url 'home' %}" class="site-title">Last Few Words</a>
+        </div>
+
+        <div class="navbar-links">
+            <ul class="nav-list">
+                {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a href="{% url 'account_logout' %}" class="nav-link">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="{% url 'account_login' %}" class="nav-link">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{% url 'account_signup' %}" class="nav-link">Sign Up</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
     <main role="main" class="main-content-wrapper">
         {% block content %}{% endblock %}
     </main>
+
     <footer class="footer">
         <div class="container">
-            <span class="text-muted">&copy; Last Few Words 2024</span>
+            <span class="text-muted">© Last Few Words {% now "Y" %}</span>
         </div>
     </footer>
+
     {% block extra_js %}{% endblock %}
 </body>
 </html>

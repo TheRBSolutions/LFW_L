@@ -2,17 +2,23 @@
 {% load socialaccount %}
 {% block content %}
 <div class="main-container">
-<h2>Sign Up</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Sign Up</button>
+    <h2>Sign Up</h2>
 
-    {% comment %} <a href="{% url 'socialaccount_login' 'google' %}">Sign in with Google</a> {% endcomment %}
-    {% comment %} <a href="{% url 'socialaccount:login_by_provider' 'google' %}">Sign in with Google</a> {% endcomment %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
 
-    {% comment %} <a href="{% provider_login_url 'google' %}">Sign in with Google</a> {% endcomment %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Sign Up</button>
 
-</form>
+        {# Uncomment this line to enable Google sign-in if configured properly #}
+        {# <a href="{% provider_login_url 'google' %}">Sign in with Google</a> #}
+    </form>
 </div>
 {% endblock %}

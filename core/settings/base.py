@@ -9,12 +9,17 @@ import logging
 WSGI_APPLICATION = 'core.wsgi.application'
 ROOT_URLCONF = 'core.urls'
 
+
 # Load environment variables from a .env file
 load_dotenv()
 
+AUTH_USER_MODEL = 'accounts.User'
+
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY')
+SECRET_KEY = 'Iv+llwwehvpfzhhTilykK1Nyr/A4+0Bfl+OCogleNsknAW73HW77VVdKG0f/dARA'
+ALLOWED_HOSTS = ['lfwlatest-production.up.railway.app','therbsolutions.com', 'www.therbsolutions.com','localhost', '127.0.0.1']
+
 DEBUG = True
 
 # Media files (user uploads)
@@ -70,6 +75,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -207,7 +213,7 @@ LOGGING = {
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',  # default
     'guardian.backends.ObjectPermissionBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',  # for allauth
+    # 'allauth.account.auth_backends.AuthenticationBackend',  # for allauth
 )
 
 
@@ -237,11 +243,27 @@ ANONYMOUS_USER_ID = -1
 SITE_ID = 1
 
 
-ACCOUNT_AUTHENTICATION_METHOD = 'email'  # Use email for login
-ACCOUNT_EMAIL_REQUIRED = True  # Make email mandatory for account creation
-ACCOUNT_USERNAME_REQUIRED = False  # Disable username field
-ACCOUNT_EMAIL_VERIFICATION = 'none'  # No email verification
+# AllAuth settings
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'none'
+ACCOUNT_USERNAME_REQUIRED = False  # We'll handle username generation in the form
+ACCOUNT_UNIQUE_EMAIL = True
+ACCOUNT_USER_MODEL_USERNAME_FIELD = 'username'  # Keep this for model compatibility
 
+# Forms
+ACCOUNT_FORMS = {
+    'signup': 'apps.accounts.forms.CustomSignupForm',
+}
+
+# AllAuth configuration
+ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # Set to 'mandatory' if you want email verification
+ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_UNIQUE_EMAIL = True
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -254,12 +276,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 
 
-LOGIN_REDIRECT_URL = 'home'
-LOGOUT_REDIRECT_URL = 'account_login'
-
-
-
-ACCOUNT_FORMS = {'signup': 'apps.accounts.forms.CustomSignupForm'}
 
 
 
@@ -267,23 +283,28 @@ ACCOUNT_FORMS = {'signup': 'apps.accounts.forms.CustomSignupForm'}
 
 # Social account providers
 
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': [
-            'profile',
-            'email',
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
-    }
-}
+# SOCIALACCOUNT_PROVIDERS = {
+#     'google': {
+#         'SCOPE': [
+#             'profile',
+#             'email',
+#         ],
+#         'AUTH_PARAMS': {
+#             'access_type': 'online',
+#         }
+#     }
+# }
 
-# Authentication settings
-AUTH_USER_MODEL = 'accounts.User'
-LOGIN_URL = 'account_login'
+
 
 
 # Mailjet API configuration
 MAILJET_API_KEY = '53689c5ba95e3b054a9587680bb2a0f3'         # Your actual API Key
 MAILJET_API_SECRET = '3bb265b3c215af88eb4058a309b2066a'      # Your actual Secret Key
+
+
+# CSRF and Security Settings
+CSRF_COOKIE_SECURE = False  # Set to True in production
+CSRF_COOKIE_HTTPONLY = True
+CSRF_USE_SESSIONS = True
+CSRF_TRUSTED_ORIGINS = ['http://localhost:8000']  # Include your domain in production

@@ -1,57 +1,29 @@
 # apps/accounts/views.py
-from allauth.account.views import SignupView as AllauthSignupView, LoginView as AllauthLoginView, LogoutView as AllauthLogoutView
-from django.contrib.auth.decorators import login_required
-from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView
-import logging
-from django.shortcuts import render
-
-# apps/accounts/views.py
+from allauth.account.views import SignupView
 from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
-from .forms import CustomSignupForm, CustomLoginForm
+from django.urls import reverse_lazy
+from .forms import CustomSignupForm
 
-def signup_view(request):
-    if request.method == 'POST':
-        form = CustomSignupForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            login(request, user)  # Log the user in after signup
-            return redirect('home')
-    else:
-        form = CustomSignupForm()
-    return render(request, 'accounts/signup.html', {'form': form})
-
-def login_view(request):
-    if request.method == 'POST':
-        form = CustomLoginForm(request, data=request.POST)
-        if form.is_valid():
-            login(request, form.get_user())  # Log the user in
-            return redirect('home')
-    else:
-        form = CustomLoginForm()
-    return render(request, 'accounts/login.html', {'form': form})
-
-def logout_view(request):
-    logout(request)
-    return redirect('home')
-
-# Profile View
-@method_decorator(login_required, name='dispatch')
-class ProfileView(TemplateView):
-    template_name = 'accounts/profile.html'
+class CustomSignupView(SignupView):
+    template_name = 'accounts/signup.html'
+    form_class = CustomSignupForm
+    success_url = reverse_lazy('home')
 
     def get_context_data(self, **kwargs):
-        logger.debug("ProfileView: Fetching context data for user profile.")
         context = super().get_context_data(**kwargs)
-        context['user'] = self.request.user
+        # Add any additional context you need
         return context
 
-# Custom Logout View using Allauth
-# class CustomLogoutView(AllauthLogoutView):
-#     next_page = 'account_login'
-
-
+    def form_valid(self, form):
+        # Custom logic before saving the user
+        response = super().form_valid(form)
+        # Custom logic after saving the user
+        return response
 
 def home_view(request):
-    return render(request, 'home.html')  # Make sure the template path is correct
+    # Your home view logic here
+    return render(request, 'home.html')
+
+def profile_view(request):
+    # Your profile view logic here
+    return render(request, 'accounts/profile.html', {'user': request.user})
