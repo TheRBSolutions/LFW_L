@@ -1,13 +1,10 @@
 # apps/accounts/models.py
+from datetime import timedelta
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils import timezone
-from datetime import timedelta
+from django.utils.text import slugify
 
-from django.contrib.auth.models import AbstractUser
-from django.db import models
-from django.utils import timezone
-from datetime import timedelta
 
 class User(AbstractUser):
     # Custom fields
@@ -18,34 +15,26 @@ class User(AbstractUser):
     storage_limit = models.BigIntegerField(default=1073741824)  # 1GB
     is_deceased = models.BooleanField(default=False)
     death_verified = models.BooleanField(default=False)
+    trusted_devices = models.JSONField(default=list, blank=True)  # New field to store trusted devices as a list
 
-    # Override the relationships to avoid conflicts
-    groups = models.ManyToManyField(
-        'auth.Group',
-        related_name='custom_user_set',
-        blank=True,
-        help_text='The groups this user belongs to.',
-        verbose_name='groups',
-    )
-    user_permissions = models.ManyToManyField(
-        'auth.Permission',
-        related_name='custom_user_set',
-        blank=True,
-        help_text='Specific permissions for this user.',
-        verbose_name='user permissions',
-    )
 
-    class Meta:
-        verbose_name = 'User'
-        verbose_name_plural = 'Users'
+    def save(self, *args, **kwargs):
+        # Generate a unique username if it is not set
+        if not self.username:
+            base_username = slugify(f"{self.first_name}{self.last_name}")
+            unique_username = base_username
+            num = 1
+            while User.objects.filter(username=unique_username).exists():
+                unique_username = f"{base_username}{num}"
+                num += 1
+            self.username = unique_username
+        super().save(*args, **kwargs)
 
-    def __str__(self):
-        return self.email or self.username
 
     @property
     def is_online(self):
         """Check if user was active in the last 5 minutes"""
-        activity = self.useractivity_set.first()
+        activity = self.useractivity_set.first() # pylint: disable=no-member
         if activity:
             return activity.last_activity >= timezone.now() - timedelta(minutes=5)
         return False
@@ -62,7 +51,7 @@ class UserActivity(models.Model):
         get_latest_by = 'last_activity'
 
     def __str__(self):
-        return f"{self.user.email}'s activity at {self.last_activity}"
+        return f"{self.user.email}'s activity at {self.last_activity}" # pylint: disable=no-member
 
     @property
     def is_online(self):

@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
-
 {% block title %}
 Home - Last Few Words
 {% endblock %}
-
 {% block content %}
     <div class="home-container">
         <h1 class="home-title">Welcome to Last Few Words</h1>
         <p class="home-lead">Your platform to share and preserve precious memories.</p>
         <hr class="divider">
-
         {% if user.is_authenticated %}
+            <p>Welcome, {{ user.email }}</p> <div class="home-container">
+        <h1 class="home-title">Welcome to Last Few Words</h1>
+        <p class="home-lead">Your platform to share and preserve precious memories.</p>
+        <hr class="divider">
             <h2 class="section-title">Available Sections</h2>
             <ul class="section-list">
                 {% comment %} <li class="section-item">
@@ -20,7 +21,7 @@ Home - Last Few Words
                     <a href="{% url 'content_list' %}" class="section-link">Content List</a>
                 </li>
                 <li class="section-item">
-                    <a href="{% url 'content_upload' %}" class="section-link">Upload Content</a>
+                    <a href="{% url 'upload_content' %}" class="section-link">Upload Content</a>
                 </li>
                 <li class="section-item">
                     <a href="{% url 'legacy_list' %}" class="section-link">Family Legacy List</a>
@@ -30,7 +31,7 @@ Home - Last Few Words
                 </li>
             </ul>
         {% else %}
-            <p><a class="btn btn-primary btn-lg" href="{% url 'account_signup' %}">Sign Up Today</a></p>
+            <p><a class="btn button btn-primary btn-lg" href="{% url 'account_signup' %}">Sign Up Today</a></p>
         {% endif %}
     </div>
 {% endblock %}

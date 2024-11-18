@@ -1,48 +1,65 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
     <title>{% block title %}Last Few Words{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% load static %}
+    <link
+      rel="stylesheet"
+      href="{% static 'css/styles.css' %}?v=1.0"
+    />
+    <link href="{% static 'css/output.css' %}" rel="stylesheet">
     {% block extra_css %}{% endblock %}
-</head>
-<body>
-    <nav class="navbar">
-        <div class="navbar-brand">
-            <img src="{% static 'images/logo.png' %}" alt="LFW Logo" class="logo">
-            <a href="{% url 'home' %}" class="site-title">Last Few Words</a>
-        </div>
 
-        <div class="navbar-links">
-            <ul class="nav-list">
-                {% if user.is_authenticated %}
-                    <li class="nav-item">
-                        <a href="{% url 'account_logout' %}" class="nav-link">Logout</a>
-                    </li>
-                {% else %}
-                    <li class="nav-item">
-                        <a href="{% url 'account_login' %}" class="nav-link">Login</a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="{% url 'account_signup' %}" class="nav-link">Sign Up</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </div>
+
+
+
+  </head>
+  <body>
+    <nav class="navbar">
+      <div class="navbar-brand">
+        <img
+          src="{% static 'images/logo.png' %}"
+          alt="LFW Logo"
+          class="logo"
+        />
+        <a
+          href="{% url 'home' %}"
+          class="site-title"
+          >Last Few Words</a
+        >
+      </div>
+
+      <div class="navbar-links">
+        <!-- Add the Logout Button -->
+            {% if user.is_authenticated %}
+                {% comment %} <p>User is authenticated</p> {% endcomment %}
+                <a href="{% url 'account_logout' %}" class="btn btn-logout">Logout</a>
+            {% else %}
+                {% comment %} <p>User is not authenticated</p> {% endcomment %}
+                <a href="{% url 'login' %}" class="btn btn-login">Login</a>
+            {% endif %}
+
+      </div>
     </nav>
 
-    <main role="main" class="main-content-wrapper">
-        {% block content %}{% endblock %}
+    <main
+      role="main"
+      class="main-content-wrapper"
+    >
+      {% block content %}{% endblock %}
     </main>
 
     <footer class="footer">
-        <div class="container">
-            <span class="text-muted">© Last Few Words {% now "Y" %}</span>
-        </div>
+      <div class="container">
+        <span class="text-muted">© Last Few Words {% now "Y" %}</span>
+      </div>
     </footer>
 
     {% block extra_js %}{% endblock %}
-</body>
+  </body>
 </html>

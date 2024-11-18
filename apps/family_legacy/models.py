@@ -8,3 +8,11 @@ class FamilyLegacy(models.Model):
     description = models.TextField()
     content = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+
+class Meta:
+    permissions = (
+    ('view_family_legacy', 'Can view this family legacy'),
+    ('edit_family_legacy', 'Can edit this family legacy'),
+    ('share_family_legacy', 'Can share this family legacy'),
+)

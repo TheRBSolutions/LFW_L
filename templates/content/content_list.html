@@ -3,15 +3,59 @@
 {% block title %}My Content{% endblock %}
 
 {% block content %}
-<h2>My Content</h2>
-{% for item in content_list %}
+<h2>Your Content</h2>
+{% for content in own_content %}
     <div class="content-item">
-        <h3>{{ item.title }}</h3>
-        <p>{{ item.description }}</p>
-        <a href="{{ item.file.url }}" target="_blank" class="btn btn-primary">Play</a>
+        <h3>{{ content.title }}</h3>
+        <p>{{ content.description }}</p>
+        
+        {% if content.content_type == 'image' %}
+            <img src="/media/{{ content.file }}" alt="{{ content.title }}" class="content-preview">
+        {% elif content.content_type == 'video' %}
+            <video width="320" height="240" controls>
+                <source src="/media/{{ content.file }}" type="video/mp4">
+            </video>
+        {% else %}
+            <a href="/media/{{ content.file }}">View File</a>
+        {% endif %}
+        
+        <div class="actions">
+            <a href="{% url 'delete_content' content.pk %}">Delete</a>
+            <a href="{% url 'share_content' content.pk %}">Share</a>
+        </div>
     </div>
 {% empty %}
-    <p>No content available.</p>
+    <p>You have no content.</p>
 {% endfor %}
-<a href="{% url 'content_upload' %}" class="btn btn-success">Upload New Content</a>
+
+<h2>Shared Content</h2>
+{% for content in shared_content %}
+    <div class="content-item">
+        <h3>{{ content.title }}</h3>
+        <p>{{ content.description }}</p>
+        
+        {% if content.content_type == 'image' %}
+            <img src="/media/{{ content.file }}" alt="{{ content.title }}" class="content-preview">
+        {% elif content.content_type == 'video' %}
+            <video width="320" height="240" controls>
+                <source src="/media/{{ content.file }}" type="video/mp4">
+            </video>
+        {% else %}
+            <a href="/media/{{ content.file }}">View File</a>
+        {% endif %}
+        
+        <div class="actions">
+            {% if perms.content.edit_content %}
+                <a href="{% url 'edit_content' content.pk %}">Edit</a>
+            {% endif %}
+            {% if perms.content.delete_content %}
+                <a href="{% url 'delete_content' content.pk %}">Delete</a>
+            {% endif %}
+        </div>
+    </div>
+{% empty %}
+    <p>No content has been shared with you.</p>
+{% endfor %}
+
+<a href="{% url 'upload_content' %}" class="btn btn-success">Upload New Content</a>
 {% endblock %}

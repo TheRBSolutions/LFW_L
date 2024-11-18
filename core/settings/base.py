@@ -49,17 +49,18 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     
     # Third party apps
-    'crispy_forms',
     'corsheaders',
-    'crispy_bootstrap5',
     'allauth',
     'allauth.account',
+    'crispy_forms',
+    'crispy_tailwind',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'django_cleanup.apps.CleanupConfig',
     'debug_toolbar',
     'guardian',
     'ninja',  # Changed from 'ninja'
+   
     'widget_tweaks',
     
     # Local apps
@@ -67,6 +68,7 @@ INSTALLED_APPS = [
     'apps.content',
     'apps.family_legacy',
     'apps.dashboard',
+    "django_browser_reload",
     # Added missing comma
 ]
 
@@ -77,13 +79,15 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'debug_toolbar.middleware.DebugToolbarMiddleware',
     'apps.accounts.middleware.UserActivityMiddleware',
     'allauth.account.middleware.AccountMiddleware',
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
+
+    
 ]
 
 
@@ -170,6 +174,8 @@ LOGGING = {
         'console': {
             'class': 'logging.StreamHandler',
             'formatter': 'verbose',  # Use the 'verbose' format for detailed logging
+            'level': 'DEBUG',  # Add this line
+
         },
     },
     'root': {
@@ -211,9 +217,8 @@ LOGGING = {
 
 
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',  # default
+    'django.contrib.auth.backends.ModelBackend',   
     'guardian.backends.ObjectPermissionBackend',
-    # 'allauth.account.auth_backends.AuthenticationBackend',  # for allauth
 )
 
 
@@ -262,23 +267,38 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'  # Set to 'mandatory' if you want email verification
 ACCOUNT_USERNAME_REQUIRED = False
 ACCOUNT_UNIQUE_EMAIL = True
-LOGIN_REDIRECT_URL = '/'
-LOGOUT_REDIRECT_URL = '/'
 
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# EMAIL_HOST = 'mail.therbsolutions.com'             # Your SMTP server
-# EMAIL_PORT = 587                                    # Port for TLS
-# EMAIL_USE_TLS = True                                # Enable TLS
-# EMAIL_HOST_USER = 'test123@therbsolutions.com'      # Your InterServer email address
-# EMAIL_HOST_PASSWORD = 'ak47ma41'                    # Your email account password
-# DEFAULT_FROM_EMAIL = EMAIL_HOST_USER                # Default "from" email address
+# Login/Logout Settings
+LOGIN_URL = 'account_login'
+LOGIN_REDIRECT_URL = 'home'
+# LOGOUT_REDIRECT_URL = 'account_login'
+ADMIN_LOGOUT_REDIRECT_URL = '/admin/login/'  # Custom URL for admin logout
 
 
 
+# Mailjet API credentials
+MAILJET_API_KEY = os.getenv('MJ_APIKEY_PUBLIC')
+MAILJET_API_SECRET = os.getenv('MJ_APIKEY_PRIVATE')
+
+
+# settings.py
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'in-v3.mailjet.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = MAILJET_API_KEY      # Use the variable from environment
+EMAIL_HOST_PASSWORD = MAILJET_API_SECRET  # Use the variable from environment
+
+DEFAULT_FROM_EMAIL = 'therbsol@therbsolutions.com'  # Replace with your sender email
 
 
 
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "tailwind"
+CRISPY_TEMPLATE_PACK = "tailwind"
 
 
 # Social account providers
@@ -308,3 +328,7 @@ CSRF_COOKIE_SECURE = False  # Set to True in production
 CSRF_COOKIE_HTTPONLY = True
 CSRF_USE_SESSIONS = True
 CSRF_TRUSTED_ORIGINS = ['http://localhost:8000','https://lfwlatest-production.up.railway.app']  # Include your domain in production
+
+
+TIME_ZONE = 'Asia/Karachi'
+USE_TZ = False

@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container p-4 mx-auto">
+    <h1 class="mb-6 text-2xl">My Content</h1>
+
+    <!-- Owned Content -->
+    <div class="mb-8">
+        <h2 class="mb-4 text-xl">Content I Own</h2>
+        {% if owned_content %}
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {% for content in owned_content %}
+                    <div class="p-4 transition-shadow border rounded-lg hover:shadow-lg">
+                        <h3 class="font-semibold">{{ content.title }}</h3>
+                        <p class="mt-2 text-sm text-gray-600">
+                            {{ content.description|truncatewords:20 }}
+                        </p>
+                        <div class="flex items-center justify-between mt-4">
+                            <span class="text-sm text-gray-500">
+                                {{ content.created_at|date:"M d, Y" }}
+                            </span>
+                            <a href="{% url 'content:share' content.pk %}" 
+                               class="text-blue-500 transition-colors hover:text-blue-700">
+                                Share
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-600">You haven't created any content yet.</p>
+        {% endif %}
+    </div>
+
+    <!-- Shared Content -->
+    <div>
+        <h2 class="mb-4 text-xl">Content Shared With Me</h2>
+        {% if shared_content %}
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+                {% for content in shared_content %}
+                    <div class="p-4 border rounded-lg">
+                        <h3 class="font-semibold">{{ content.title }}</h3>
+                        <p class="mt-2 text-sm text-gray-600">
+                            {{ content.description|truncatewords:20 }}
+                        </p>
+                        <p class="mt-2 text-sm text-gray-500">
+                            Shared by: {{ content.user.email }}
+                        </p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-600">No content has been shared with you yet.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

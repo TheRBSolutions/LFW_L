@@ -68,3 +68,29 @@ def get_dashboard_data():
             'limits': [user.storage_limit / (1024 * 1024 * 1024) for user in users]
         }
     }
+
+
+
+@login_required
+def compare_data(request):
+    # Get data from original view implementation
+    view_data = get_dashboard_data()
+    
+    # Get data from API service implementation
+    service = DashboardMetricsService()
+    api_data = {
+        'user_metrics': service.get_user_metrics(),
+        'content_metrics': service.get_content_metrics(),
+        'legacy_metrics': service.get_legacy_metrics(),
+        'user_growth': service.get_user_growth(),
+        'content_distribution': service.get_content_distribution(),
+        'hourly_activity': service.get_hourly_activity(),
+        'storage_usage_trend': service.get_storage_usage_trend(),
+        'recent_activities': service.get_recent_activities(),
+    }
+    
+    # Return both for comparison
+    return JsonResponse({
+        'view_implementation': view_data,
+        'api_implementation': api_data
+    }, json_dumps_params={'indent': 2})

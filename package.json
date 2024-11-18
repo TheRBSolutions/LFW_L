@@ -1,0 +1,23 @@
+{
+  "name": "lfw",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TheRBSolutions/lfw_latest.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TheRBSolutions/lfw_latest/issues"
+  },
+  "homepage": "https://github.com/TheRBSolutions/lfw_latest#readme",
+  "dependencies": {
+    "tailwindcss": "^3.4.14"
+  }
+}

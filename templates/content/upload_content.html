@@ -1,10 +1,9 @@
-{% extends "base.html" %}
-{% block title %}Upload Content{% endblock %}
-{% block content %}
-<h2>Upload New Content</h2>
-<form method="post" enctype="multipart/form-data" action="{% url 'content_upload' %}">
+<form method="post" enctype="multipart/form-data">
     {% csrf_token %}
     {{ form.as_p }}
-    <button type="submit" class="btn btn-primary">Upload</button>
+    
+    <h3>Share with others</h3>
+    {{ share_form.as_p }}
+
+    <button type="submit">Upload and Share</button>
 </form>
-{% endblock %}

@@ -4,9 +4,10 @@ from typing import Dict, Any
 # Import the DashboardMetricsService
 from .services.dashboard_service import DashboardMetricsService
 
-router = Router()
+router = Router(tags=['dashboard'])  # Optional: add tags for API documentation
 
-@router.get("/data")
+
+@router.get("/metrics")
 def get_dashboard_data(request) -> Dict[str, Any]:
     """API endpoint for dashboard data"""
     try:
