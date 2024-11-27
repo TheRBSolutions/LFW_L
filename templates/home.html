@@ -7,21 +7,20 @@ Home - Last Few Words
         <h1 class="home-title">Welcome to Last Few Words</h1>
         <p class="home-lead">Your platform to share and preserve precious memories.</p>
         <hr class="divider">
+
         {% if user.is_authenticated %}
-            <p>Welcome, {{ user.email }}</p> <div class="home-container">
-        <h1 class="home-title">Welcome to Last Few Words</h1>
-        <p class="home-lead">Your platform to share and preserve precious memories.</p>
-        <hr class="divider">
+            <p>Welcome, {{ user.email }}</p>
+
             <h2 class="section-title">Available Sections</h2>
             <ul class="section-list">
-                {% comment %} <li class="section-item">
-                    <a href="{% url 'account_profile' %}" class="section-link">Profile</a>
-                </li> {% endcomment %}
                 <li class="section-item">
                     <a href="{% url 'content_list' %}" class="section-link">Content List</a>
                 </li>
                 <li class="section-item">
-                    <a href="{% url 'upload_content' %}" class="section-link">Upload Content</a>
+                    <a href="{% url 'admin_upload_content' folder_id=1 %}" class="section-link">Upload Content</a>
+                </li>
+                <li class="section-item">
+                    <a href="{% url 'admin_folder_detail' folder_id=1 %}" class="section-link">View Folder</a>
                 </li>
                 <li class="section-item">
                     <a href="{% url 'legacy_list' %}" class="section-link">Family Legacy List</a>

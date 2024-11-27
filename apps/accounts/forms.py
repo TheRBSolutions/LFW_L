@@ -1,9 +1,8 @@
-# forms.py
 from django import forms
 from django.contrib.auth import get_user_model
 from django.contrib.auth.forms import UserCreationForm
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Submit, Row, Column, HTML, Field
+from crispy_forms.layout import Layout, Submit, Row, Column, HTML
 
 class RegistrationForm(UserCreationForm):
     first_name = forms.CharField()
@@ -52,3 +51,10 @@ class RegistrationForm(UserCreationForm):
             ),
             HTML('<p class="mt-4 text-center"><a href="{% url "login" %}" class="text-blue-500 hover:underline">Already have an account? Login</a></p>')
         )
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.is_staff = True  # Automatically make the user a staff member
+        if commit:
+            user.save()
+        return user

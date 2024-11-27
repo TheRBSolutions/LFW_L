@@ -1,0 +1,25 @@
+<div class="container">
+    <h2>{{ content.title }}</h2>
+    <p>{{ content.description }}</p>
+
+    <!-- Display file based on content type -->
+    {% if content.file %}
+        {% if content.content_type == 'image' %}
+            <img src="{{ content.file.url }}" alt="{{ content.title }}" class="img-fluid">
+        {% elif content.content_type == 'video' %}
+            <video width="100%" controls>
+                <source src="{{ content.file.url }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        {% elif content.content_type == 'audio' %}
+            <audio controls>
+                <source src="{{ content.file.url }}" type="audio/mpeg">
+                Your browser does not support the audio element.
+            </audio>
+        {% else %}
+            <a href="{{ content.file.url }}" target="_blank">Download File</a>
+        {% endif %}
+    {% else %}
+        <p>No file available.</p>
+    {% endif %}
+</div>

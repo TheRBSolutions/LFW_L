@@ -1,0 +1,23 @@
+{% extends "admin/base_site.html" %}
+
+{% block content %}
+<h1>Folder: {{ folder.name }}</h1>
+
+<h2>Subfolders</h2>
+<ul>
+    {% for subfolder in subfolders %}
+        <li>
+            <a href="{% url 'admin_folder_detail' subfolder.id %}">{{ subfolder.name }}</a>
+        </li>
+    {% endfor %}
+</ul>
+
+<h2>Files</h2>
+<ul>
+    {% for file in files %}
+        <li>{{ file.name }}</li>
+    {% endfor %}
+</ul>
+
+<a href="{% url 'admin:filer_folder_changelist' %}" class="button">Back to Folders</a>
+{% endblock %}

@@ -53,6 +53,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'crispy_forms',
+    'easy_thumbnails',
+    'filer',
     'crispy_tailwind',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',

@@ -7,6 +7,8 @@ from guardian.shortcuts import assign_perm
 import uuid
 import os
 
+from filer.models import Folder, File  # Import Filer's models
+
 User = get_user_model()
 
 def content_file_path(instance, filename):
@@ -24,12 +26,14 @@ class Content(models.Model):
     ]
 
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    folder = models.ForeignKey(Folder, null=True, blank=True, on_delete=models.SET_NULL)  # Link to Filer's Folder model
+    file = models.FileField(upload_to=content_file_path)  # Use content_file_path for file uploads
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True)
     content_type = models.CharField(max_length=20, choices=CONTENT_TYPES)
-    file = models.FileField(upload_to=content_file_path)
     size = models.BigIntegerField(editable=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         permissions = (

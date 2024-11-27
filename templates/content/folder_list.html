@@ -1,0 +1,15 @@
+<!-- folder_list.html -->
+<div class="container">
+    <h2>Folders</h2>
+    {% if folders %}
+        <ul>
+            {% for folder in folders %}
+                <li>
+                    <a href="{% url 'folder_detail' folder.id %}">{{ folder.name }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No folders available.</p>
+    {% endif %}
+</div>
